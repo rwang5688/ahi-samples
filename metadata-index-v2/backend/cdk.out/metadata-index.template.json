@@ -1,0 +1,3402 @@
+{
+ "Metadata": {
+  "cdk_nag": {
+   "rules_to_suppress": [
+    {
+     "reason": "Roles created by CDK constructs.",
+     "id": "AwsSolutions-IAM4"
+    },
+    {
+     "reason": "Access to getImageSetMetadata at datastore level does not provide any privileges but is necessary to allow privelege at lower level of ImageSet within the datastore.",
+     "id": "AwsSolutions-IAM5"
+    },
+    {
+     "reason": "Password rotation not required.",
+     "id": "AwsSolutions-SMG4"
+    },
+    {
+     "reason": "Default port is preferred. Access is secured by security group.",
+     "id": "AwsSolutions-RDS11"
+    },
+    {
+     "reason": "auditing disabled.",
+     "id": "AwsSolutions-RDS16"
+    }
+   ]
+  }
+ },
+ "Resources": {
+  "NetworkVpc7FB7348F": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.10.0.0/22",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/Resource"
+   }
+  },
+  "NetworkVpcPrivateSubnet1Subnet6DD86AE6": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.10.0.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet1/Subnet"
+   }
+  },
+  "NetworkVpcPrivateSubnet1RouteTable7D7AA3CD": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet1/RouteTable"
+   }
+  },
+  "NetworkVpcPrivateSubnet1RouteTableAssociation327CA62F": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "NetworkVpcPrivateSubnet1RouteTable7D7AA3CD"
+    },
+    "SubnetId": {
+     "Ref": "NetworkVpcPrivateSubnet1Subnet6DD86AE6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "NetworkVpcPrivateSubnet1DefaultRoute08635105": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "NetworkVpcPublicSubnet1NATGateway64781A21"
+    },
+    "RouteTableId": {
+     "Ref": "NetworkVpcPrivateSubnet1RouteTable7D7AA3CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet1/DefaultRoute"
+   }
+  },
+  "NetworkVpcPrivateSubnet2Subnet1BDBE877": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.10.1.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet2/Subnet"
+   }
+  },
+  "NetworkVpcPrivateSubnet2RouteTableC48862D1": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet2/RouteTable"
+   }
+  },
+  "NetworkVpcPrivateSubnet2RouteTableAssociation89A2F1E8": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "NetworkVpcPrivateSubnet2RouteTableC48862D1"
+    },
+    "SubnetId": {
+     "Ref": "NetworkVpcPrivateSubnet2Subnet1BDBE877"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet2/RouteTableAssociation"
+   }
+  },
+  "NetworkVpcPrivateSubnet2DefaultRouteA15DC6D5": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "NetworkVpcPublicSubnet1NATGateway64781A21"
+    },
+    "RouteTableId": {
+     "Ref": "NetworkVpcPrivateSubnet2RouteTableC48862D1"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet2/DefaultRoute"
+   }
+  },
+  "NetworkVpcPrivateSubnet3Subnet8ABFAF5C": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1c",
+    "CidrBlock": "10.10.2.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PrivateSubnet3"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet3/Subnet"
+   }
+  },
+  "NetworkVpcPrivateSubnet3RouteTable7FC52A8D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PrivateSubnet3"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet3/RouteTable"
+   }
+  },
+  "NetworkVpcPrivateSubnet3RouteTableAssociation616B0E34": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "NetworkVpcPrivateSubnet3RouteTable7FC52A8D"
+    },
+    "SubnetId": {
+     "Ref": "NetworkVpcPrivateSubnet3Subnet8ABFAF5C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet3/RouteTableAssociation"
+   }
+  },
+  "NetworkVpcPrivateSubnet3DefaultRouteFE7FEBED": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "NetworkVpcPublicSubnet1NATGateway64781A21"
+    },
+    "RouteTableId": {
+     "Ref": "NetworkVpcPrivateSubnet3RouteTable7FC52A8D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PrivateSubnet3/DefaultRoute"
+   }
+  },
+  "NetworkVpcPublicSubnet1Subnet36933139": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.10.3.0/28",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet1/Subnet"
+   }
+  },
+  "NetworkVpcPublicSubnet1RouteTable30235CE2": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet1/RouteTable"
+   }
+  },
+  "NetworkVpcPublicSubnet1RouteTableAssociation643926C7": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "NetworkVpcPublicSubnet1RouteTable30235CE2"
+    },
+    "SubnetId": {
+     "Ref": "NetworkVpcPublicSubnet1Subnet36933139"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "NetworkVpcPublicSubnet1DefaultRoute31EC04EC": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "NetworkVpcIGW6BEA7B02"
+    },
+    "RouteTableId": {
+     "Ref": "NetworkVpcPublicSubnet1RouteTable30235CE2"
+    }
+   },
+   "DependsOn": [
+    "NetworkVpcVPCGW8F3799B5"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "NetworkVpcPublicSubnet1EIPE0D52090": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PublicSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet1/EIP"
+   }
+  },
+  "NetworkVpcPublicSubnet1NATGateway64781A21": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "NetworkVpcPublicSubnet1EIPE0D52090",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "NetworkVpcPublicSubnet1Subnet36933139"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PublicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "NetworkVpcPublicSubnet1DefaultRoute31EC04EC",
+    "NetworkVpcPublicSubnet1RouteTableAssociation643926C7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet1/NATGateway"
+   }
+  },
+  "NetworkVpcPublicSubnet2SubnetC427CCE0": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.10.3.16/28",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet2/Subnet"
+   }
+  },
+  "NetworkVpcPublicSubnet2RouteTable0FACEBB2": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet2/RouteTable"
+   }
+  },
+  "NetworkVpcPublicSubnet2RouteTableAssociationC662643B": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "NetworkVpcPublicSubnet2RouteTable0FACEBB2"
+    },
+    "SubnetId": {
+     "Ref": "NetworkVpcPublicSubnet2SubnetC427CCE0"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "NetworkVpcPublicSubnet2DefaultRoute0CF082AB": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "NetworkVpcIGW6BEA7B02"
+    },
+    "RouteTableId": {
+     "Ref": "NetworkVpcPublicSubnet2RouteTable0FACEBB2"
+    }
+   },
+   "DependsOn": [
+    "NetworkVpcVPCGW8F3799B5"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "NetworkVpcPublicSubnet3Subnet4BBF7F47": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1c",
+    "CidrBlock": "10.10.3.32/28",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PublicSubnet3"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet3/Subnet"
+   }
+  },
+  "NetworkVpcPublicSubnet3RouteTable4F517CA2": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc/PublicSubnet3"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet3/RouteTable"
+   }
+  },
+  "NetworkVpcPublicSubnet3RouteTableAssociationDBCF32A1": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "NetworkVpcPublicSubnet3RouteTable4F517CA2"
+    },
+    "SubnetId": {
+     "Ref": "NetworkVpcPublicSubnet3Subnet4BBF7F47"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet3/RouteTableAssociation"
+   }
+  },
+  "NetworkVpcPublicSubnet3DefaultRoute320997B4": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "NetworkVpcIGW6BEA7B02"
+    },
+    "RouteTableId": {
+     "Ref": "NetworkVpcPublicSubnet3RouteTable4F517CA2"
+    }
+   },
+   "DependsOn": [
+    "NetworkVpcVPCGW8F3799B5"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/PublicSubnet3/DefaultRoute"
+   }
+  },
+  "NetworkVpcIGW6BEA7B02": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/Vpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/IGW"
+   }
+  },
+  "NetworkVpcVPCGW8F3799B5": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "NetworkVpcIGW6BEA7B02"
+    },
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/VPCGW"
+   }
+  },
+  "NetworkVpcRestrictDefaultSecurityGroupCustomResource491E144D": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "NetworkVpc7FB7348F",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "793803570670"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/Vpc/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "NetworkahiindexLogGroupEDF335AB": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "RetentionInDays": 731
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/ahi-index-LogGroup/Resource"
+   }
+  },
+  "NetworkahiindexFlowlogsroleFA28ACB5": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "vpc-flow-logs.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/ahi-index-Flowlogsrole/Resource"
+   }
+  },
+  "NetworkahiindexFlowlogsroleDefaultPolicyF342D294": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:DescribeLogStreams",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "NetworkahiindexLogGroupEDF335AB",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "NetworkahiindexFlowlogsroleFA28ACB5",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "NetworkahiindexFlowlogsroleDefaultPolicyF342D294",
+    "Roles": [
+     {
+      "Ref": "NetworkahiindexFlowlogsroleFA28ACB5"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/ahi-index-Flowlogsrole/DefaultPolicy/Resource"
+   }
+  },
+  "NetworkahiindexFlowLogD9FE65F9": {
+   "Type": "AWS::EC2::FlowLog",
+   "Properties": {
+    "DeliverLogsPermissionArn": {
+     "Fn::GetAtt": [
+      "NetworkahiindexFlowlogsroleFA28ACB5",
+      "Arn"
+     ]
+    },
+    "LogDestinationType": "cloud-watch-logs",
+    "LogGroupName": {
+     "Ref": "NetworkahiindexLogGroupEDF335AB"
+    },
+    "ResourceId": {
+     "Ref": "NetworkVpc7FB7348F"
+    },
+    "ResourceType": "VPC",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "metadata-index/Network/ahi-index-FlowLog"
+     }
+    ],
+    "TrafficType": "ALL"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Network/ahi-index-FlowLog/FlowLog"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-1:793803570670:security-group/",
+             {
+              "Fn::GetAtt": [
+               "NetworkVpc7FB7348F",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "7f18a11296f35510ee16538afec983ed6312e12afbf81b777089a9f8e34e2474.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.7f18a11296f35510ee16538afec983ed6312e12afbf81b777089a9f8e34e2474",
+    "aws:asset:property": "Code"
+   }
+  },
+  "SecurityGroupsahiindexLambdasSGFE038253": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Lambdas security group.",
+    "GroupName": "metadata-index-Lambdas-SG",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Security Groups/ahi-index-Lambdas-SG/Resource"
+   }
+  },
+  "SecurityGroupsahiindexAuroraSG2A885AF7": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Aurora MYSQL security group.",
+    "GroupName": "metadata-index-Aurora-SG",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "Description": "Allows connection to RDS",
+      "FromPort": 3306,
+      "IpProtocol": "tcp",
+      "SourceSecurityGroupId": {
+       "Fn::GetAtt": [
+        "SecurityGroupsahiindexLambdasSGFE038253",
+        "GroupId"
+       ]
+      },
+      "ToPort": 3306
+     }
+    ],
+    "VpcId": {
+     "Ref": "NetworkVpc7FB7348F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Security Groups/ahi-index-Aurora-SG/Resource"
+   }
+  },
+  "snstopic2C4AE3C1": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::793803570670:root"
+       },
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "lambda.amazonaws.com",
+         "s3.amazonaws.com"
+        ]
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/sns-topic/Resource"
+   }
+  },
+  "ahitoindextopicE05151F3": {
+   "Type": "AWS::SNS::Topic",
+   "Properties": {
+    "DisplayName": "metadata-indexahi-to-index-topic",
+    "KmsMasterKeyId": {
+     "Fn::GetAtt": [
+      "snstopic2C4AE3C1",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-index-topic/Resource"
+   }
+  },
+  "ahitoindextopicPolicyD8C65474": {
+   "Type": "AWS::SNS::TopicPolicy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sns:Publish",
+       "Condition": {
+        "ArnLike": {
+         "aws:SourceArn": "arn:aws:s3:::healthimaging-output-bucket-40030240"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "s3.amazonaws.com"
+       },
+       "Resource": {
+        "Ref": "ahitoindextopicE05151F3"
+       },
+       "Sid": "0"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Topics": [
+     {
+      "Ref": "ahitoindextopicE05151F3"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-index-topic/Policy/Resource"
+   }
+  },
+  "ImportedBucketNotifications9C01C2F8": {
+   "Type": "Custom::S3BucketNotifications",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691",
+      "Arn"
+     ]
+    },
+    "BucketName": "healthimaging-output-bucket-40030240",
+    "NotificationConfiguration": {
+     "TopicConfigurations": [
+      {
+       "Events": [
+        "s3:ObjectCreated:*"
+       ],
+       "Filter": {
+        "Key": {
+         "FilterRules": [
+          {
+           "Name": "suffix",
+           "Value": "job-output-manifest.json"
+          }
+         ]
+        }
+       },
+       "TopicArn": {
+        "Ref": "ahitoindextopicE05151F3"
+       }
+      }
+     ]
+    },
+    "Managed": false
+   },
+   "DependsOn": [
+    "ahitoindextopicPolicyD8C65474",
+    "ahitoindextopicE05151F3"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ImportedBucket/Notifications/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetBucketNotification",
+        "s3:PutBucketNotification"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+    "Roles": [
+     {
+      "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Description": "AWS CloudFormation handler for \"Custom::S3BucketNotifications\" resources (@aws-cdk/aws-s3)",
+    "Code": {
+     "ZipFile": "import boto3  # type: ignore\nimport json\nimport logging\nimport urllib.request\n\ns3 = boto3.client(\"s3\")\n\nEVENTBRIDGE_CONFIGURATION = 'EventBridgeConfiguration'\n\nCONFIGURATION_TYPES = [\"TopicConfigurations\", \"QueueConfigurations\", \"LambdaFunctionConfigurations\"]\n\ndef handler(event: dict, context):\n  response_status = \"SUCCESS\"\n  error_message = \"\"\n  try:\n    props = event[\"ResourceProperties\"]\n    bucket = props[\"BucketName\"]\n    notification_configuration = props[\"NotificationConfiguration\"]\n    request_type = event[\"RequestType\"]\n    managed = props.get('Managed', 'true').lower() == 'true'\n    stack_id = event['StackId']\n\n    if managed:\n      config = handle_managed(request_type, notification_configuration)\n    else:\n      config = handle_unmanaged(bucket, stack_id, request_type, notification_configuration)\n\n    put_bucket_notification_configuration(bucket, config)\n  except Exception as e:\n    logging.exception(\"Failed to put bucket notification configuration\")\n    response_status = \"FAILED\"\n    error_message = f\"Error: {str(e)}. \"\n  finally:\n    submit_response(event, context, response_status, error_message)\n\ndef handle_managed(request_type, notification_configuration):\n  if request_type == 'Delete':\n    return {}\n  return notification_configuration\n\ndef handle_unmanaged(bucket, stack_id, request_type, notification_configuration):\n  external_notifications = find_external_notifications(bucket, stack_id)\n\n  if request_type == 'Delete':\n    return external_notifications\n\n  def with_id(notification):\n    notification['Id'] = f\"{stack_id}-{hash(json.dumps(notification, sort_keys=True))}\"\n    return notification\n\n  notifications = {}\n  for t in CONFIGURATION_TYPES:\n    external = external_notifications.get(t, [])\n    incoming = [with_id(n) for n in notification_configuration.get(t, [])]\n    notifications[t] = external + incoming\n\n  if EVENTBRIDGE_CONFIGURATION in notification_configuration:\n    notifications[EVENTBRIDGE_CONFIGURATION] = notification_configuration[EVENTBRIDGE_CONFIGURATION]\n  elif EVENTBRIDGE_CONFIGURATION in external_notifications:\n    notifications[EVENTBRIDGE_CONFIGURATION] = external_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  return notifications\n\ndef find_external_notifications(bucket, stack_id):\n  existing_notifications = get_bucket_notification_configuration(bucket)\n  external_notifications = {}\n  for t in CONFIGURATION_TYPES:\n    external_notifications[t] = [n for n in existing_notifications.get(t, []) if not n['Id'].startswith(f\"{stack_id}-\")]\n\n  if EVENTBRIDGE_CONFIGURATION in existing_notifications:\n    external_notifications[EVENTBRIDGE_CONFIGURATION] = existing_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  return external_notifications\n\ndef get_bucket_notification_configuration(bucket):\n  return s3.get_bucket_notification_configuration(Bucket=bucket)\n\ndef put_bucket_notification_configuration(bucket, notification_configuration):\n  s3.put_bucket_notification_configuration(Bucket=bucket, NotificationConfiguration=notification_configuration)\n\ndef submit_response(event: dict, context, response_status: str, error_message: str):\n  response_body = json.dumps(\n    {\n      \"Status\": response_status,\n      \"Reason\": f\"{error_message}See the details in CloudWatch Log Stream: {context.log_stream_name}\",\n      \"PhysicalResourceId\": event.get(\"PhysicalResourceId\") or event[\"LogicalResourceId\"],\n      \"StackId\": event[\"StackId\"],\n      \"RequestId\": event[\"RequestId\"],\n      \"LogicalResourceId\": event[\"LogicalResourceId\"],\n      \"NoEcho\": False,\n    }\n  ).encode(\"utf-8\")\n  headers = {\"content-type\": \"\", \"content-length\": str(len(response_body))}\n  try:\n    req = urllib.request.Request(url=event[\"ResponseURL\"], headers=headers, data=response_body, method=\"PUT\")\n    with urllib.request.urlopen(req) as response:\n      print(response.read().decode(\"utf-8\"))\n    print(\"Status code: \" + response.reason)\n  except Exception as e:\n      print(\"send(..) failed executing request.urlopen(..): \" + str(e))\n"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Timeout": 300
+   },
+   "DependsOn": [
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource"
+   }
+  },
+  "ahitordbmsAuroraDBahiindexAuroraSubnetGroup1CB429EB": {
+   "Type": "AWS::RDS::DBSubnetGroup",
+   "Properties": {
+    "DBSubnetGroupDescription": "ahi index Aurora DB Subnet Group",
+    "SubnetIds": [
+     {
+      "Ref": "NetworkVpcPrivateSubnet1Subnet6DD86AE6"
+     },
+     {
+      "Ref": "NetworkVpcPrivateSubnet2Subnet1BDBE877"
+     },
+     {
+      "Ref": "NetworkVpcPrivateSubnet3Subnet8ABFAF5C"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-Aurora-Subnet-Group/Default"
+   }
+  },
+  "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Generated by the CDK for stack: ",
+       {
+        "Ref": "AWS::StackName"
+       }
+      ]
+     ]
+    },
+    "GenerateSecretString": {
+     "ExcludeCharacters": " %+~`#$&*()|[]{}:;<>?!'/@\"\\",
+     "GenerateStringKey": "password",
+     "PasswordLength": 30,
+     "SecretStringTemplate": "{\"username\":\"admin\"}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-DBCluster/Secret/Resource"
+   }
+  },
+  "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B": {
+   "Type": "AWS::SecretsManager::SecretTargetAttachment",
+   "Properties": {
+    "SecretId": {
+     "Ref": "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb"
+    },
+    "TargetId": {
+     "Ref": "ahitordbmsAuroraDBahiindexDBClusterCBB3A332"
+    },
+    "TargetType": "AWS::RDS::DBCluster"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-DBCluster/Secret/Attachment/Resource"
+   }
+  },
+  "ahitordbmsAuroraDBahiindexDBClusterCBB3A332": {
+   "Type": "AWS::RDS::DBCluster",
+   "Properties": {
+    "BacktrackWindow": 86400,
+    "CopyTagsToSnapshot": true,
+    "DBClusterIdentifier": "metadata-index-ahi-index-db-cluster",
+    "DBClusterParameterGroupName": "default.aurora-mysql8.0",
+    "DBSubnetGroupName": {
+     "Ref": "ahitordbmsAuroraDBahiindexAuroraSubnetGroup1CB429EB"
+    },
+    "DatabaseName": "ahiindex",
+    "DeletionProtection": true,
+    "EnableIAMDatabaseAuthentication": true,
+    "Engine": "aurora-mysql",
+    "EngineVersion": "8.0.mysql_aurora.3.04.0",
+    "MasterUserPassword": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb"
+       },
+       ":SecretString:password::}}"
+      ]
+     ]
+    },
+    "MasterUsername": "admin",
+    "ServerlessV2ScalingConfiguration": {
+     "MinCapacity": 1,
+     "MaxCapacity": 16
+    },
+    "StorageEncrypted": true,
+    "VpcSecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "SecurityGroupsahiindexAuroraSG2A885AF7",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Snapshot",
+   "DeletionPolicy": "Snapshot",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-DBCluster/Resource"
+   }
+  },
+  "ahitordbmsAuroraDBahiindexDBClusterInstance1EF9057ED": {
+   "Type": "AWS::RDS::DBInstance",
+   "Properties": {
+    "DBClusterIdentifier": {
+     "Ref": "ahitordbmsAuroraDBahiindexDBClusterCBB3A332"
+    },
+    "DBInstanceClass": "db.Serverless",
+    "DBInstanceIdentifier": "metadata-index-ahi-index-db-clusterinstance1",
+    "DBSubnetGroupName": {
+     "Ref": "ahitordbmsAuroraDBahiindexAuroraSubnetGroup1CB429EB"
+    },
+    "Engine": "aurora-mysql",
+    "PubliclyAccessible": false
+   },
+   "DependsOn": [
+    "NetworkVpcPrivateSubnet1DefaultRoute08635105",
+    "NetworkVpcPrivateSubnet1RouteTableAssociation327CA62F",
+    "NetworkVpcPrivateSubnet2DefaultRouteA15DC6D5",
+    "NetworkVpcPrivateSubnet2RouteTableAssociation89A2F1E8",
+    "NetworkVpcPrivateSubnet3DefaultRouteFE7FEBED",
+    "NetworkVpcPrivateSubnet3RouteTableAssociation616B0E34"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-DBCluster/Instance1"
+   }
+  },
+  "SecretA720EF05": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Name": "metadata-index-ahi-db-user-secret",
+    "SecretString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"username\":\"ahi_parser\",\"host\":\"",
+       {
+        "Fn::GetAtt": [
+         "ahitordbmsAuroraDBahiindexDBClusterCBB3A332",
+         "Endpoint.Address"
+        ]
+       },
+       "\",\"dbname\":\"ahiindex\"}"
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Secret/Resource"
+   }
+  },
+  "ahitordbmsdbinitlambdaroleRole9FE2E88E": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "This Role is used by the Lambdas to access to subnets.",
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-db-init-lambdarole/Role/Resource"
+   }
+  },
+  "ahitordbmsdbinitlambdaroleRoleDefaultPolicy505CD453": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "secretsmanager:GetSecretValue",
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ahitordbmsdbinitlambdaroleRoleDefaultPolicy505CD453",
+    "Roles": [
+     {
+      "Ref": "ahitordbmsdbinitlambdaroleRole9FE2E88E"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-db-init-lambdarole/Role/DefaultPolicy/Resource"
+   }
+  },
+  "ahitordbmsdbInitahitoindexmysqlConnectorC5E7D660": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "CompatibleRuntimes": [
+     "python3.11"
+    ],
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "569bfe98e51df96bc8b53215922e4b159c337516c270b16cead42e1445aaceb8.zip"
+    },
+    "Description": "",
+    "LicenseInfo": "Apache-2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-db-Init/ahi-to-index-mysqlConnector/Resource",
+    "aws:asset:path": "asset.569bfe98e51df96bc8b53215922e4b159c337516c270b16cead42e1445aaceb8",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "ahitordbmsdbInitahitoindexmysqlConnectionFactory835B921C": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "CompatibleRuntimes": [
+     "python3.11"
+    ],
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "2821ba35d929b22d9cc40960ac368a144bcbe85772d63354ded27841846aba9f.zip"
+    },
+    "Description": "",
+    "LicenseInfo": "Apache-2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-db-Init/ahi-to-index-mysqlConnectionFactory/Resource",
+    "aws:asset:path": "asset.2821ba35d929b22d9cc40960ac368a144bcbe85772d63354ded27841846aba9f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "ahitordbmsdbInit44AE1FF9": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "fdfdfaf5c21e4c8ea76d46bed8b301d3b7a2bbfca85bd19246b3a438c9289ead.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "DB_SECRET": {
+       "Ref": "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B"
+      }
+     }
+    },
+    "Handler": "index.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "ahitordbmsdbInitahitoindexmysqlConnectionFactory835B921C"
+     },
+     {
+      "Ref": "ahitordbmsdbInitahitoindexmysqlConnectorC5E7D660"
+     }
+    ],
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ahitordbmsdbinitlambdaroleRole9FE2E88E",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 900,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "SecurityGroupsahiindexLambdasSGFE038253",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "NetworkVpcPrivateSubnet1Subnet6DD86AE6"
+      },
+      {
+       "Ref": "NetworkVpcPrivateSubnet2Subnet1BDBE877"
+      },
+      {
+       "Ref": "NetworkVpcPrivateSubnet3Subnet8ABFAF5C"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "ahitordbmsdbinitlambdaroleRoleDefaultPolicy505CD453",
+    "ahitordbmsdbinitlambdaroleRole9FE2E88E",
+    "NetworkVpcPrivateSubnet1DefaultRoute08635105",
+    "NetworkVpcPrivateSubnet1RouteTableAssociation327CA62F",
+    "NetworkVpcPrivateSubnet2DefaultRouteA15DC6D5",
+    "NetworkVpcPrivateSubnet2RouteTableAssociation89A2F1E8",
+    "NetworkVpcPrivateSubnet3DefaultRouteFE7FEBED",
+    "NetworkVpcPrivateSubnet3RouteTableAssociation616B0E34"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-db-Init/ahi-to-rdbms-db-Init/Resource",
+    "aws:asset:path": "asset.fdfdfaf5c21e4c8ea76d46bed8b301d3b7a2bbfca85bd19246b3a438c9289ead",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleE008C3DC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "ahitordbmsAuroraDBahiindexDBClusterInstance1EF9057ED",
+    "ahitordbmsAuroraDBahiindexDBClusterCBB3A332",
+    "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B",
+    "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/db-schema/CustomLambdaResourceProvider/framework-onEvent/ServiceRole/Resource"
+   }
+  },
+  "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleDefaultPolicy8595371D": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ahitordbmsdbInit44AE1FF9",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ahitordbmsdbInit44AE1FF9",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleDefaultPolicy8595371D",
+    "Roles": [
+     {
+      "Ref": "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleE008C3DC"
+     }
+    ]
+   },
+   "DependsOn": [
+    "ahitordbmsAuroraDBahiindexDBClusterInstance1EF9057ED",
+    "ahitordbmsAuroraDBahiindexDBClusterCBB3A332",
+    "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B",
+    "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/db-schema/CustomLambdaResourceProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "dbschemaCustomLambdaResourceProviderframeworkonEventADE1FD4E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "7382a0addb9f34974a1ea6c6c9b063882af874828f366f5c93b2b7b64db15c94.zip"
+    },
+    "Description": "AWS CDK resource provider framework - onEvent (metadata-index/db-schema/CustomLambdaResourceProvider)",
+    "Environment": {
+     "Variables": {
+      "USER_ON_EVENT_FUNCTION_ARN": {
+       "Fn::GetAtt": [
+        "ahitordbmsdbInit44AE1FF9",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "Handler": "framework.onEvent",
+    "Role": {
+     "Fn::GetAtt": [
+      "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleE008C3DC",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "ahitordbmsAuroraDBahiindexDBClusterInstance1EF9057ED",
+    "ahitordbmsAuroraDBahiindexDBClusterCBB3A332",
+    "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B",
+    "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb",
+    "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleDefaultPolicy8595371D",
+    "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleE008C3DC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/db-schema/CustomLambdaResourceProvider/framework-onEvent/Resource",
+    "aws:asset:path": "asset.7382a0addb9f34974a1ea6c6c9b063882af874828f366f5c93b2b7b64db15c94",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "dbschemaCustomLambdaResourceProviderframeworkonEventLogRetention880EDAD8": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "dbschemaCustomLambdaResourceProviderframeworkonEventADE1FD4E"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 3
+   },
+   "DependsOn": [
+    "ahitordbmsAuroraDBahiindexDBClusterInstance1EF9057ED",
+    "ahitordbmsAuroraDBahiindexDBClusterCBB3A332",
+    "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B",
+    "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/db-schema/CustomLambdaResourceProvider/framework-onEvent/LogRetention/Resource"
+   }
+  },
+  "dbschemaCustomLambdaResource51704CF9": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "dbschemaCustomLambdaResourceProviderframeworkonEventADE1FD4E",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "ahitordbmsAuroraDBahiindexDBClusterInstance1EF9057ED",
+    "ahitordbmsAuroraDBahiindexDBClusterCBB3A332",
+    "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B",
+    "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/db-schema/CustomLambdaResource/Default"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:DeleteRetentionPolicy",
+        "logs:PutRetentionPolicy"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+    "Roles": [
+     {
+      "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Handler": "index.handler",
+    "Runtime": "nodejs18.x",
+    "Timeout": 900,
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "5bc602ecde93c947efe5899ae355f999986a1acbe610b1c0b9c468d738857555.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource",
+    "aws:asset:path": "asset.5bc602ecde93c947efe5899ae355f999986a1acbe610b1c0b9c468d738857555",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ahitordbmslambdaroleRole3EF0F301": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "This Role is used by the Lambdas to access to subnets.",
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-lambdarole/Role/Resource"
+   }
+  },
+  "ahitordbmslambdaroleRoleDefaultPolicy5CAA777F": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "rds-db:connect",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:rds-db:us-east-1:793803570670:dbuser:",
+          {
+           "Fn::GetAtt": [
+            "ahitordbmsAuroraDBahiindexDBClusterCBB3A332",
+            "DBClusterResourceId"
+           ]
+          },
+          "/ahi_parser"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "secretsmanager:GetSecretValue",
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "SecretA720EF05"
+       }
+      },
+      {
+       "Action": "medical-imaging:GetImageSetMetadata",
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:medical-imaging:us-east-1:793803570670:datastore/46015371bee548dd90178e18eaa7b96a",
+        "arn:aws:medical-imaging:us-east-1:793803570670:datastore/46015371bee548dd90178e18eaa7b96a/imageset/*"
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:s3:::healthimaging-output-bucket-40030240",
+        "arn:aws:s3:::healthimaging-output-bucket-40030240/*"
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ahitordbmslambdaroleRoleDefaultPolicy5CAA777F",
+    "Roles": [
+     {
+      "Ref": "ahitordbmslambdaroleRole3EF0F301"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-lambdarole/Role/DefaultPolicy/Resource"
+   }
+  },
+  "ahitordbmsahitoindexmysqlConnector6C06ADB8": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "CompatibleRuntimes": [
+     "python3.11"
+    ],
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "569bfe98e51df96bc8b53215922e4b159c337516c270b16cead42e1445aaceb8.zip"
+    },
+    "Description": "",
+    "LicenseInfo": "Apache-2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms/ahi-to-index-mysqlConnector/Resource",
+    "aws:asset:path": "asset.569bfe98e51df96bc8b53215922e4b159c337516c270b16cead42e1445aaceb8",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "ahitordbmsahitoindexmysqlConnectionFactory456E5B62": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "CompatibleRuntimes": [
+     "python3.11"
+    ],
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "2821ba35d929b22d9cc40960ac368a144bcbe85772d63354ded27841846aba9f.zip"
+    },
+    "Description": "",
+    "LicenseInfo": "Apache-2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms/ahi-to-index-mysqlConnectionFactory/Resource",
+    "aws:asset:path": "asset.2821ba35d929b22d9cc40960ac368a144bcbe85772d63354ded27841846aba9f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "ahitordbmsahitoindexAHIClientFactory55E8BB30": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "CompatibleRuntimes": [
+     "python3.11"
+    ],
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "b97ca22bc1fbef01f9f0be6a8b7838a8d34aedfe3cf89b240f85030d567e0173.zip"
+    },
+    "Description": "",
+    "LicenseInfo": "Apache-2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms/ahi-to-index-AHIClientFactory/Resource",
+    "aws:asset:path": "asset.b97ca22bc1fbef01f9f0be6a8b7838a8d34aedfe3cf89b240f85030d567e0173",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "ahitordbms8DE3F29A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "edb5429fde7fb39cc09287ee517d4db9c3b3895b76fb6dc0c1f754db62250bf6.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "DB_SECRET": {
+       "Ref": "SecretA720EF05"
+      },
+      "POPULATE_INSTANCE_LEVEL": "True",
+      "POPULATE_FRAME_LEVEL": "True",
+      "AHLI_ENDPOINT": ""
+     }
+    },
+    "Handler": "index.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "ahitordbmsahitoindexAHIClientFactory55E8BB30"
+     },
+     {
+      "Ref": "ahitordbmsahitoindexmysqlConnectionFactory456E5B62"
+     },
+     {
+      "Ref": "ahitordbmsahitoindexmysqlConnector6C06ADB8"
+     }
+    ],
+    "MemorySize": 4096,
+    "Role": {
+     "Fn::GetAtt": [
+      "ahitordbmslambdaroleRole3EF0F301",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 120,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "SecurityGroupsahiindexLambdasSGFE038253",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "NetworkVpcPrivateSubnet1Subnet6DD86AE6"
+      },
+      {
+       "Ref": "NetworkVpcPrivateSubnet2Subnet1BDBE877"
+      },
+      {
+       "Ref": "NetworkVpcPrivateSubnet3Subnet8ABFAF5C"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "ahitordbmslambdaroleRoleDefaultPolicy5CAA777F",
+    "ahitordbmslambdaroleRole3EF0F301",
+    "NetworkVpcPrivateSubnet1DefaultRoute08635105",
+    "NetworkVpcPrivateSubnet1RouteTableAssociation327CA62F",
+    "NetworkVpcPrivateSubnet2DefaultRouteA15DC6D5",
+    "NetworkVpcPrivateSubnet2RouteTableAssociation89A2F1E8",
+    "NetworkVpcPrivateSubnet3DefaultRouteFE7FEBED",
+    "NetworkVpcPrivateSubnet3RouteTableAssociation616B0E34"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms/ahi-to-rdbms/Resource",
+    "aws:asset:path": "asset.edb5429fde7fb39cc09287ee517d4db9c3b3895b76fb6dc0c1f754db62250bf6",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ahitordbmsahitordbmssllowsns9DD916FC": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ahitordbms8DE3F29A",
+      "Arn"
+     ]
+    },
+    "Principal": "sns.amazonaws.com"
+   },
+   "DependsOn": [
+    "NetworkVpcPrivateSubnet1DefaultRoute08635105",
+    "NetworkVpcPrivateSubnet1RouteTableAssociation327CA62F",
+    "NetworkVpcPrivateSubnet2DefaultRouteA15DC6D5",
+    "NetworkVpcPrivateSubnet2RouteTableAssociation89A2F1E8",
+    "NetworkVpcPrivateSubnet3DefaultRouteFE7FEBED",
+    "NetworkVpcPrivateSubnet3RouteTableAssociation616B0E34"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms/ahi-to-rdbms/ahi-to-rdbms-sllow-sns"
+   }
+  },
+  "ahitordbmssnssubscription779FAF84": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": {
+     "Fn::GetAtt": [
+      "ahitordbms8DE3F29A",
+      "Arn"
+     ]
+    },
+    "Protocol": "lambda",
+    "TopicArn": {
+     "Ref": "ahitoindextopicE05151F3"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-rdbms-sns-subscription/Resource"
+   }
+  },
+  "ahitodatalakelambdaroleRole3A9B3226": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "This Role is used by the Lambdas to access to subnets.",
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake-lambdarole/Role/Resource"
+   }
+  },
+  "ahitodatalakelambdaroleRoleDefaultPolicy13D3F636": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "medical-imaging:GetImageSetMetadata",
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:medical-imaging:us-east-1:793803570670:datastore/46015371bee548dd90178e18eaa7b96a",
+        "arn:aws:medical-imaging:us-east-1:793803570670:datastore/46015371bee548dd90178e18eaa7b96a/imageset/*"
+       ]
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ahitodatalakedestinationbucket0B05C3C4",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ahitodatalakedestinationbucket0B05C3C4",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:s3:::healthimaging-output-bucket-40030240",
+        "arn:aws:s3:::healthimaging-output-bucket-40030240/*"
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ahitodatalakelambdaroleRoleDefaultPolicy13D3F636",
+    "Roles": [
+     {
+      "Ref": "ahitodatalakelambdaroleRole3A9B3226"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake-lambdarole/Role/DefaultPolicy/Resource"
+   }
+  },
+  "Role1ABCC5F0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "logging.s3.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "Grants S3 service to put access logs."
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Role/Resource"
+   }
+  },
+  "RoleDefaultPolicy5FFB7DAB": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "ahitodatalakeaccesslogbucket54640BBD",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "RoleDefaultPolicy5FFB7DAB",
+    "Roles": [
+     {
+      "Ref": "Role1ABCC5F0"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/Role/DefaultPolicy/Resource"
+   }
+  },
+  "ahitodatalakeaccesslogbucket54640BBD": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake-access_log-bucket/Resource"
+   }
+  },
+  "ahitodatalakeaccesslogbucketPolicy87D70B5F": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "ahitodatalakeaccesslogbucket54640BBD"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ahitodatalakeaccesslogbucket54640BBD",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ahitodatalakeaccesslogbucket54640BBD",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:PutObject",
+       "Condition": {
+        "ArnLike": {
+         "aws:SourceArn": {
+          "Fn::GetAtt": [
+           "ahitodatalakedestinationbucket0B05C3C4",
+           "Arn"
+          ]
+         }
+        },
+        "StringEquals": {
+         "aws:SourceAccount": "793803570670"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "logging.s3.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "ahitodatalakeaccesslogbucket54640BBD",
+            "Arn"
+           ]
+          },
+          "/access-logs/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake-access_log-bucket/Policy/Resource"
+   }
+  },
+  "ahitodatalakedestinationbucket0B05C3C4": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "LoggingConfiguration": {
+     "DestinationBucketName": {
+      "Ref": "ahitodatalakeaccesslogbucket54640BBD"
+     },
+     "LogFilePrefix": "access-logs/"
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake-destination-bucket/Resource"
+   }
+  },
+  "ahitodatalakedestinationbucketPolicyEC3D566E": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "ahitodatalakedestinationbucket0B05C3C4"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ahitodatalakedestinationbucket0B05C3C4",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ahitodatalakedestinationbucket0B05C3C4",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake-destination-bucket/Policy/Resource"
+   }
+  },
+  "ahitodatalakeahitoindexAHItoDICOMInterface01802A81": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "CompatibleRuntimes": [
+     "python3.11"
+    ],
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "0b931851af4933f81076b174324a10a8e9e98dfb6d8223cbcf9716c06c28a55a.zip"
+    },
+    "Description": "",
+    "LicenseInfo": "Apache-2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake/ahi-to-index-AHItoDICOMInterface/Resource",
+    "aws:asset:path": "asset.0b931851af4933f81076b174324a10a8e9e98dfb6d8223cbcf9716c06c28a55a",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "ahitodatalake2B81A0FB": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-793803570670-us-east-1",
+     "S3Key": "5e9c89e1b7ad7eb5ad28d76fc122052fddf01dcd25588dbaafe93fbffce9b5d2.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "DESTINATION_BUCKET": {
+       "Ref": "ahitodatalakedestinationbucket0B05C3C4"
+      },
+      "POPULATE_INSTANCE_LEVEL": "True",
+      "AHLI_ENDPOINT": ""
+     }
+    },
+    "Handler": "index.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "ahitodatalakeahitoindexAHItoDICOMInterface01802A81"
+     }
+    ],
+    "MemorySize": 4096,
+    "Role": {
+     "Fn::GetAtt": [
+      "ahitodatalakelambdaroleRole3A9B3226",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 120,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "SecurityGroupsahiindexLambdasSGFE038253",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "NetworkVpcPrivateSubnet1Subnet6DD86AE6"
+      },
+      {
+       "Ref": "NetworkVpcPrivateSubnet2Subnet1BDBE877"
+      },
+      {
+       "Ref": "NetworkVpcPrivateSubnet3Subnet8ABFAF5C"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "ahitodatalakelambdaroleRoleDefaultPolicy13D3F636",
+    "ahitodatalakelambdaroleRole3A9B3226",
+    "NetworkVpcPrivateSubnet1DefaultRoute08635105",
+    "NetworkVpcPrivateSubnet1RouteTableAssociation327CA62F",
+    "NetworkVpcPrivateSubnet2DefaultRouteA15DC6D5",
+    "NetworkVpcPrivateSubnet2RouteTableAssociation89A2F1E8",
+    "NetworkVpcPrivateSubnet3DefaultRouteFE7FEBED",
+    "NetworkVpcPrivateSubnet3RouteTableAssociation616B0E34"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake/ahi-to-datalake/Resource",
+    "aws:asset:path": "asset.5e9c89e1b7ad7eb5ad28d76fc122052fddf01dcd25588dbaafe93fbffce9b5d2",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ahitodatalakeahitodatalakeallowssns37D18694": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ahitodatalake2B81A0FB",
+      "Arn"
+     ]
+    },
+    "Principal": "sns.amazonaws.com"
+   },
+   "DependsOn": [
+    "NetworkVpcPrivateSubnet1DefaultRoute08635105",
+    "NetworkVpcPrivateSubnet1RouteTableAssociation327CA62F",
+    "NetworkVpcPrivateSubnet2DefaultRouteA15DC6D5",
+    "NetworkVpcPrivateSubnet2RouteTableAssociation89A2F1E8",
+    "NetworkVpcPrivateSubnet3DefaultRouteFE7FEBED",
+    "NetworkVpcPrivateSubnet3RouteTableAssociation616B0E34"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalake/ahi-to-datalake/ahi-to-datalake-allows-sns"
+   }
+  },
+  "ahidatalakedbahiindexgluedatabase032F0C6B": {
+   "Type": "AWS::Glue::Database",
+   "Properties": {
+    "CatalogId": "793803570670",
+    "DatabaseInput": {
+     "Name": "metadata-index-ahi-index"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-glue-database/Resource"
+   }
+  },
+  "ahidatalakedbahiindexgluetablepatientTableA4527712": {
+   "Type": "AWS::Glue::Table",
+   "Properties": {
+    "CatalogId": "793803570670",
+    "DatabaseName": {
+     "Ref": "ahidatalakedbahiindexgluedatabase032F0C6B"
+    },
+    "TableInput": {
+     "Description": "Patient table",
+     "Name": "patient",
+     "Parameters": {
+      "classification": "json",
+      "has_encrypted_data": true
+     },
+     "PartitionKeys": [
+      {
+       "Name": "year",
+       "Type": "string"
+      },
+      {
+       "Name": "month",
+       "Type": "string"
+      },
+      {
+       "Name": "day",
+       "Type": "string"
+      }
+     ],
+     "StorageDescriptor": {
+      "Columns": [
+       {
+        "Name": "patientid",
+        "Type": "string"
+       },
+       {
+        "Name": "issuerofpatientid",
+        "Type": "string"
+       },
+       {
+        "Name": "patientbirthdate",
+        "Type": "string"
+       },
+       {
+        "Name": "patientsex",
+        "Type": "string"
+       },
+       {
+        "Name": "patientname",
+        "Type": "string"
+       },
+       {
+        "Name": "datastoreid",
+        "Type": "string"
+       },
+       {
+        "Name": "imagesetid",
+        "Type": "string"
+       },
+       {
+        "Name": "patientsize",
+        "Type": "string"
+       },
+       {
+        "Name": "patientbodymassindex",
+        "Type": "string"
+       },
+       {
+        "Name": "updatedat",
+        "Type": "timestamp"
+       }
+      ],
+      "Compressed": false,
+      "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+      "Location": {
+       "Fn::Join": [
+        "",
+        [
+         "s3://",
+         {
+          "Ref": "ahitodatalakedestinationbucket0B05C3C4"
+         },
+         "/patient/"
+        ]
+       ]
+      },
+      "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+      "SerdeInfo": {
+       "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
+      },
+      "StoredAsSubDirectories": false
+     },
+     "TableType": "EXTERNAL_TABLE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-glue-table-patient/Table"
+   }
+  },
+  "ahidatalakedbahiindexgluetablestudyTable94B734FD": {
+   "Type": "AWS::Glue::Table",
+   "Properties": {
+    "CatalogId": "793803570670",
+    "DatabaseName": {
+     "Ref": "ahidatalakedbahiindexgluedatabase032F0C6B"
+    },
+    "TableInput": {
+     "Description": "Study table",
+     "Name": "study",
+     "Parameters": {
+      "classification": "json",
+      "has_encrypted_data": true
+     },
+     "PartitionKeys": [
+      {
+       "Name": "year",
+       "Type": "string"
+      },
+      {
+       "Name": "month",
+       "Type": "string"
+      },
+      {
+       "Name": "day",
+       "Type": "string"
+      }
+     ],
+     "StorageDescriptor": {
+      "Columns": [
+       {
+        "Name": "studyinstanceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "studydate",
+        "Type": "string"
+       },
+       {
+        "Name": "studydescription",
+        "Type": "string"
+       },
+       {
+        "Name": "studytime",
+        "Type": "string"
+       },
+       {
+        "Name": "modalitiesinstudy",
+        "Type": "string"
+       },
+       {
+        "Name": "accessionnumber",
+        "Type": "string"
+       },
+       {
+        "Name": "studyid",
+        "Type": "string"
+       },
+       {
+        "Name": "referringphysicianname",
+        "Type": "string"
+       },
+       {
+        "Name": "datastoreid",
+        "Type": "string"
+       },
+       {
+        "Name": "imagesetid",
+        "Type": "string"
+       },
+       {
+        "Name": "patientage",
+        "Type": "string"
+       },
+       {
+        "Name": "patientid",
+        "Type": "string"
+       },
+       {
+        "Name": "issuerofpatientid",
+        "Type": "string"
+       },
+       {
+        "Name": "reasonforvisit",
+        "Type": "string"
+       },
+       {
+        "Name": "patientstate",
+        "Type": "string"
+       },
+       {
+        "Name": "updatedat",
+        "Type": "timestamp"
+       }
+      ],
+      "Compressed": false,
+      "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+      "Location": {
+       "Fn::Join": [
+        "",
+        [
+         "s3://",
+         {
+          "Ref": "ahitodatalakedestinationbucket0B05C3C4"
+         },
+         "/study/"
+        ]
+       ]
+      },
+      "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+      "SerdeInfo": {
+       "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
+      },
+      "StoredAsSubDirectories": false
+     },
+     "TableType": "EXTERNAL_TABLE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-glue-table-study/Table"
+   }
+  },
+  "ahidatalakedbahiindexgluetableseriesTable0380DF75": {
+   "Type": "AWS::Glue::Table",
+   "Properties": {
+    "CatalogId": "793803570670",
+    "DatabaseName": {
+     "Ref": "ahidatalakedbahiindexgluedatabase032F0C6B"
+    },
+    "TableInput": {
+     "Description": "Series table",
+     "Name": "series",
+     "Parameters": {
+      "classification": "json",
+      "has_encrypted_data": true
+     },
+     "PartitionKeys": [
+      {
+       "Name": "year",
+       "Type": "string"
+      },
+      {
+       "Name": "month",
+       "Type": "string"
+      },
+      {
+       "Name": "day",
+       "Type": "string"
+      }
+     ],
+     "StorageDescriptor": {
+      "Columns": [
+       {
+        "Name": "datastoreid",
+        "Type": "string"
+       },
+       {
+        "Name": "imagesetid",
+        "Type": "string"
+       },
+       {
+        "Name": "studyinstanceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "seriesinstanceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "patientposition",
+        "Type": "string"
+       },
+       {
+        "Name": "modality",
+        "Type": "string"
+       },
+       {
+        "Name": "softwareversions",
+        "Type": "string"
+       },
+       {
+        "Name": "institutionname",
+        "Type": "string"
+       },
+       {
+        "Name": "manufacturermodelname",
+        "Type": "string"
+       },
+       {
+        "Name": "deviceserialnumber",
+        "Type": "string"
+       },
+       {
+        "Name": "seriesdescription",
+        "Type": "string"
+       },
+       {
+        "Name": "positionreferenceindicator",
+        "Type": "string"
+       },
+       {
+        "Name": "stationname",
+        "Type": "string"
+       },
+       {
+        "Name": "pixelpaddingvalue",
+        "Type": "int"
+       },
+       {
+        "Name": "spatialresolution",
+        "Type": "string"
+       },
+       {
+        "Name": "seriesdate",
+        "Type": "string"
+       },
+       {
+        "Name": "seriesnumber",
+        "Type": "string"
+       },
+       {
+        "Name": "frameofreferenceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "laterality",
+        "Type": "string"
+       },
+       {
+        "Name": "seriestime",
+        "Type": "string"
+       },
+       {
+        "Name": "dateoflastcalibration",
+        "Type": "string"
+       },
+       {
+        "Name": "bodypartexamined",
+        "Type": "string"
+       },
+       {
+        "Name": "updatedat",
+        "Type": "timestamp"
+       }
+      ],
+      "Compressed": false,
+      "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+      "Location": {
+       "Fn::Join": [
+        "",
+        [
+         "s3://",
+         {
+          "Ref": "ahitodatalakedestinationbucket0B05C3C4"
+         },
+         "/series/"
+        ]
+       ]
+      },
+      "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+      "SerdeInfo": {
+       "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
+      },
+      "StoredAsSubDirectories": false
+     },
+     "TableType": "EXTERNAL_TABLE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-glue-table-series/Table"
+   }
+  },
+  "ahidatalakedbahiindexgluetableinstanceTable1D2B2E52": {
+   "Type": "AWS::Glue::Table",
+   "Properties": {
+    "CatalogId": "793803570670",
+    "DatabaseName": {
+     "Ref": "ahidatalakedbahiindexgluedatabase032F0C6B"
+    },
+    "TableInput": {
+     "Description": "Instance table",
+     "Name": "instance",
+     "Parameters": {
+      "classification": "json",
+      "has_encrypted_data": true
+     },
+     "PartitionKeys": [
+      {
+       "Name": "year",
+       "Type": "string"
+      },
+      {
+       "Name": "month",
+       "Type": "string"
+      },
+      {
+       "Name": "day",
+       "Type": "string"
+      }
+     ],
+     "StorageDescriptor": {
+      "Columns": [
+       {
+        "Name": "datastoreid",
+        "Type": "string"
+       },
+       {
+        "Name": "imagesetid",
+        "Type": "string"
+       },
+       {
+        "Name": "instancenumber",
+        "Type": "string"
+       },
+       {
+        "Name": "seriesinstanceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "instanceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "specificcharacterset",
+        "Type": "string"
+       },
+       {
+        "Name": "windowwidth",
+        "Type": "string"
+       },
+       {
+        "Name": "slicelocation",
+        "Type": "string"
+       },
+       {
+        "Name": "imagetype",
+        "Type": "string"
+       },
+       {
+        "Name": "bitsallocated",
+        "Type": "int"
+       },
+       {
+        "Name": "imageorientationpatient",
+        "Type": "string"
+       },
+       {
+        "Name": "referencedframeofreferenceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "mediastoragesopclassuid",
+        "Type": "string"
+       },
+       {
+        "Name": "exposuretime",
+        "Type": "string"
+       },
+       {
+        "Name": "contentdate",
+        "Type": "string"
+       },
+       {
+        "Name": "sopinstanceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "sopclassuid",
+        "Type": "string"
+       },
+       {
+        "Name": "rotationdirection",
+        "Type": "string"
+       },
+       {
+        "Name": "highbit",
+        "Type": "int"
+       },
+       {
+        "Name": "storagemediafilesetuid",
+        "Type": "string"
+       },
+       {
+        "Name": "implementationversionname",
+        "Type": "string"
+       },
+       {
+        "Name": "reconstructiondiameter",
+        "Type": "string"
+       },
+       {
+        "Name": "acquisitionnumber",
+        "Type": "string"
+       },
+       {
+        "Name": "exposure",
+        "Type": "string"
+       },
+       {
+        "Name": "acquisitiontime",
+        "Type": "string"
+       },
+       {
+        "Name": "contrastbolusagent",
+        "Type": "string"
+       },
+       {
+        "Name": "filtertype",
+        "Type": "string"
+       },
+       {
+        "Name": "spiralpitchfactor",
+        "Type": "float"
+       },
+       {
+        "Name": "singlecollimationwidth",
+        "Type": "float"
+       },
+       {
+        "Name": "windowcenter",
+        "Type": "string"
+       },
+       {
+        "Name": "rescaleslope",
+        "Type": "string"
+       },
+       {
+        "Name": "scanoptions",
+        "Type": "string"
+       },
+       {
+        "Name": "distancesourcetopatient",
+        "Type": "string"
+       },
+       {
+        "Name": "totalcollimationwidth",
+        "Type": "float"
+       },
+       {
+        "Name": "tablespeed",
+        "Type": "float"
+       },
+       {
+        "Name": "kvp",
+        "Type": "float"
+       },
+       {
+        "Name": "samplesperpixel",
+        "Type": "int"
+       },
+       {
+        "Name": "gantrydetectortilt",
+        "Type": "string"
+       },
+       {
+        "Name": "bitsstored",
+        "Type": "int"
+       },
+       {
+        "Name": "pixelrepresentation",
+        "Type": "int"
+       },
+       {
+        "Name": "datacollectiondiameter",
+        "Type": "string"
+       },
+       {
+        "Name": "focalspots",
+        "Type": "string"
+       },
+       {
+        "Name": "filemetainformationversion",
+        "Type": "string"
+       },
+       {
+        "Name": "synchronizationframeofreferenceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "implementationclassuid",
+        "Type": "string"
+       },
+       {
+        "Name": "photometricinterpretation",
+        "Type": "string"
+       },
+       {
+        "Name": "mediastoragesopinstanceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "acquisitiondate",
+        "Type": "string"
+       },
+       {
+        "Name": "distancesourcetodetector",
+        "Type": "string"
+       },
+       {
+        "Name": "referencedsopinstanceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "xraytubecurrent",
+        "Type": "string"
+       },
+       {
+        "Name": "rows",
+        "Type": "int"
+       },
+       {
+        "Name": "contrastbolusroute",
+        "Type": "string"
+       },
+       {
+        "Name": "transfersyntaxuid",
+        "Type": "string"
+       },
+       {
+        "Name": "relatedframeofreferenceuid",
+        "Type": "string"
+       },
+       {
+        "Name": "columns",
+        "Type": "int"
+       },
+       {
+        "Name": "rescaleintercept",
+        "Type": "string"
+       },
+       {
+        "Name": "imagepositionpatient",
+        "Type": "string"
+       },
+       {
+        "Name": "contenttime",
+        "Type": "string"
+       },
+       {
+        "Name": "convolutionkernel",
+        "Type": "string"
+       },
+       {
+        "Name": "generatorpower",
+        "Type": "string"
+       },
+       {
+        "Name": "revolutiontime",
+        "Type": "float"
+       },
+       {
+        "Name": "tableheight",
+        "Type": "string"
+       },
+       {
+        "Name": "slicethickness",
+        "Type": "string"
+       },
+       {
+        "Name": "pixelspacing",
+        "Type": "string"
+       },
+       {
+        "Name": "rescaletype",
+        "Type": "string"
+       },
+       {
+        "Name": "updatedat",
+        "Type": "timestamp"
+       }
+      ],
+      "Compressed": false,
+      "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+      "Location": {
+       "Fn::Join": [
+        "",
+        [
+         "s3://",
+         {
+          "Ref": "ahitodatalakedestinationbucket0B05C3C4"
+         },
+         "/instance/"
+        ]
+       ]
+      },
+      "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+      "SerdeInfo": {
+       "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
+      },
+      "StoredAsSubDirectories": false
+     },
+     "TableType": "EXTERNAL_TABLE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-glue-table-instance/Table"
+   }
+  },
+  "ahidatalakedbahiindexcrawlerrole3751B3B5": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "glue.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSGlueServiceRole"
+       ]
+      ]
+     }
+    ],
+    "RoleName": "ahi-index-crawler-role"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-crawler-role/Resource"
+   }
+  },
+  "ahidatalakedbahiindexcrawlerroleDefaultPolicyCA5273F6": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "ahitodatalakedestinationbucket0B05C3C4",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ahitodatalakedestinationbucket0B05C3C4",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ahitodatalakedestinationbucket0B05C3C4",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ahidatalakedbahiindexcrawlerroleDefaultPolicyCA5273F6",
+    "Roles": [
+     {
+      "Ref": "ahidatalakedbahiindexcrawlerrole3751B3B5"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-crawler-role/DefaultPolicy/Resource"
+   }
+  },
+  "ahidatalakedbahiindexgluecrawlerC445DC03": {
+   "Type": "AWS::Glue::Crawler",
+   "Properties": {
+    "Configuration": "{\"Version\": 1.0,\"CrawlerOutput\": {\"Partitions\": { \"AddOrUpdateBehavior\": \"InheritFromTable\" }}}",
+    "DatabaseName": {
+     "Ref": "ahidatalakedbahiindexgluedatabase032F0C6B"
+    },
+    "Name": "metadata-index-table-crawler",
+    "Role": {
+     "Fn::GetAtt": [
+      "ahidatalakedbahiindexcrawlerrole3751B3B5",
+      "Arn"
+     ]
+    },
+    "SchemaChangePolicy": {
+     "DeleteBehavior": "LOG",
+     "UpdateBehavior": "LOG"
+    },
+    "Targets": {
+     "CatalogTargets": [
+      {
+       "DatabaseName": {
+        "Ref": "ahidatalakedbahiindexgluedatabase032F0C6B"
+       },
+       "Tables": [
+        {
+         "Ref": "ahidatalakedbahiindexgluetablepatientTableA4527712"
+        },
+        {
+         "Ref": "ahidatalakedbahiindexgluetablestudyTable94B734FD"
+        },
+        {
+         "Ref": "ahidatalakedbahiindexgluetableseriesTable0380DF75"
+        },
+        {
+         "Ref": "ahidatalakedbahiindexgluetableinstanceTable1D2B2E52"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-glue-crawler"
+   }
+  },
+  "ahidatalakedbahiindexgluetriggerB7608596": {
+   "Type": "AWS::Glue::Trigger",
+   "Properties": {
+    "Actions": [
+     {
+      "CrawlerName": "metadata-index-table-crawler"
+     }
+    ],
+    "Name": "metadata-index-table-crawler-trigger",
+    "Schedule": "cron(0 * * * ? *)",
+    "StartOnCreation": true,
+    "Type": "SCHEDULED"
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-datalake-db/ahi-index-glue-trigger"
+   }
+  },
+  "ahitodatalkesnssubscriptionD9B463B4": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": {
+     "Fn::GetAtt": [
+      "ahitodatalake2B81A0FB",
+      "Arn"
+     ]
+    },
+    "Protocol": "lambda",
+    "TopicArn": {
+     "Ref": "ahitoindextopicE05151F3"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/ahi-to-datalke-sns-subscription/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/3VT0W7iMBD8lr4b92ilk/p2EK5VVXQXAeK12pgl9ZHYkXddhCz/+yk2JKlO98LuzM46ngl5kE9PMszv4EwzdTjNGl3JsGVQJwFneg+oHmTYd0oUR7MvC1E6/QmMW18Z5J4cu431jDuoGhz5kVsQWaWBtTWDWJS+arQaj/j5WvblF/ALMJ7h0qNXw+gMTql9WVzRghnUR4uGxXNjz2tb9/Nbu0XlnebLi7O+S7eaElE0tiYZ1rYeBEO/tvUGGU1/4Sg0tDJsbLaWamkbrdJlchfFqSUZ3jBxb3iJggzJsLOdTunlJv2Ou1O49RUpp7tbRFMcBT3KsPTqhLwEQpHbXnbtchlPnuIo3IFkyDkPVlfLKbEChgoIi8YToxvwFpXLD1otb7MEXg0xGIVRUJJQCwZqdDLknPutXHbgauTJmxoE/0wy3bt9ByJkkou+iAba6gDp6DVc0O3RUR/Tszfqlte0L9G1miglVzce0+bNUgr+9j8tHJyb7GnndF2ji1FskKx3CkXhiW07wqP5z6h09lMf0Il03y1DrU0tVNK8u6uI5CArjua3585zFPMZNN0HyG93P65f4X1fQ/Y86y78Yc1VUybwJYLe3nUaBofJXoxR5IX7R/kk59/v/pDWM+cN6xblJte/1hLOzQIEAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "metadata-index/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ahivpcid": {
+   "Value": {
+    "Ref": "NetworkVpc7FB7348F"
+   },
+   "Export": {
+    "Name": "metadata-index-ahi-vpc-id"
+   }
+  },
+  "ahioutputbucket": {
+   "Value": "healthimaging-output-bucket-40030240",
+   "Export": {
+    "Name": "metadata-index-ahi-output-bucket"
+   }
+  },
+  "ahidatastorearn": {
+   "Value": "arn:aws:medical-imaging:us-east-1:793803570670:datastore/46015371bee548dd90178e18eaa7b96a",
+   "Export": {
+    "Name": "metadata-index-ahi-datastore-arn"
+   }
+  },
+  "rdbmsclusterid": {
+   "Value": {
+    "Fn::GetAtt": [
+     "ahitordbmsAuroraDBahiindexDBClusterCBB3A332",
+     "DBClusterResourceId"
+    ]
+   },
+   "Export": {
+    "Name": "metadata-index-rdbms-database-arn"
+   }
+  },
+  "rdbmsdatabasesecretarn": {
+   "Value": {
+    "Ref": "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B"
+   },
+   "Export": {
+    "Name": "metadata-index-rdbms-database-secret-arn"
+   }
+  },
+  "rdbmsdatabasename": {
+   "Value": "ahiindex",
+   "Export": {
+    "Name": "metadata-index-rdbms-database-name"
+   }
+  },
+  "rdbmsdatabasesecuritygroup": {
+   "Value": {
+    "Fn::GetAtt": [
+     "SecurityGroupsahiindexAuroraSG2A885AF7",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "metadata-index-rdbms-database-security-group"
+   }
+  },
+  "datalakedestinationbucket": {
+   "Value": {
+    "Ref": "ahitodatalakedestinationbucket0B05C3C4"
+   },
+   "Export": {
+    "Name": "metadata-index-datalake-destination-bucket"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

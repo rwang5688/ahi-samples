@@ -1,0 +1,699 @@
+{
+  "version": "34.0.0",
+  "artifacts": {
+    "metadata-index.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "metadata-index.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "metadata-index": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://793803570670/us-east-1",
+      "properties": {
+        "templateFile": "metadata-index.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::793803570670:role/cdk-hnb659fds-deploy-role-793803570670-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::793803570670:role/cdk-hnb659fds-cfn-exec-role-793803570670-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-793803570670-us-east-1/f01e7b686d42edcc1346464cc3b8cfdbfe62a61daf328ae76f83f177bf5afc5a.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "metadata-index.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::793803570670:role/cdk-hnb659fds-lookup-role-793803570670-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "metadata-index.assets"
+      ],
+      "metadata": {
+        "/metadata-index/Network/Vpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpc7FB7348F"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet1Subnet6DD86AE6"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet1RouteTable7D7AA3CD"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet1RouteTableAssociation327CA62F"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet1DefaultRoute08635105"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet2Subnet1BDBE877"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet2RouteTableC48862D1"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet2RouteTableAssociation89A2F1E8"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet2DefaultRouteA15DC6D5"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet3/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet3Subnet8ABFAF5C"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet3/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet3RouteTable7FC52A8D"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet3/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet3RouteTableAssociation616B0E34"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PrivateSubnet3/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPrivateSubnet3DefaultRouteFE7FEBED"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet1Subnet36933139"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet1RouteTable30235CE2"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet1RouteTableAssociation643926C7"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet1DefaultRoute31EC04EC"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet1EIPE0D52090"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet1NATGateway64781A21"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet2SubnetC427CCE0"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet2RouteTable0FACEBB2"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet2RouteTableAssociationC662643B"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet2DefaultRoute0CF082AB"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet3/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet3Subnet4BBF7F47"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet3/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet3RouteTable4F517CA2"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet3/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet3RouteTableAssociationDBCF32A1"
+          }
+        ],
+        "/metadata-index/Network/Vpc/PublicSubnet3/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcPublicSubnet3DefaultRoute320997B4"
+          }
+        ],
+        "/metadata-index/Network/Vpc/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcIGW6BEA7B02"
+          }
+        ],
+        "/metadata-index/Network/Vpc/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcVPCGW8F3799B5"
+          }
+        ],
+        "/metadata-index/Network/Vpc/RestrictDefaultSecurityGroupCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkVpcRestrictDefaultSecurityGroupCustomResource491E144D"
+          }
+        ],
+        "/metadata-index/Network/ahi-index-LogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkahiindexLogGroupEDF335AB"
+          }
+        ],
+        "/metadata-index/Network/ahi-index-Flowlogsrole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkahiindexFlowlogsroleFA28ACB5"
+          }
+        ],
+        "/metadata-index/Network/ahi-index-Flowlogsrole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkahiindexFlowlogsroleDefaultPolicyF342D294"
+          }
+        ],
+        "/metadata-index/Network/ahi-index-FlowLog/FlowLog": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NetworkahiindexFlowLogD9FE65F9"
+          }
+        ],
+        "/metadata-index/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+          }
+        ],
+        "/metadata-index/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
+          }
+        ],
+        "/metadata-index/Security Groups/ahi-index-Lambdas-SG/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SecurityGroupsahiindexLambdasSGFE038253"
+          }
+        ],
+        "/metadata-index/Security Groups/ahi-index-Aurora-SG/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SecurityGroupsahiindexAuroraSG2A885AF7"
+          }
+        ],
+        "/metadata-index/sns-topic/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "snstopic2C4AE3C1"
+          }
+        ],
+        "/metadata-index/ahi-to-index-topic/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitoindextopicE05151F3"
+          }
+        ],
+        "/metadata-index/ahi-to-index-topic/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitoindextopicPolicyD8C65474"
+          }
+        ],
+        "/metadata-index/ImportedBucket/Notifications/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ImportedBucketNotifications9C01C2F8"
+          }
+        ],
+        "/metadata-index/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+          }
+        ],
+        "/metadata-index/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36"
+          }
+        ],
+        "/metadata-index/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-Aurora-Subnet-Group/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsAuroraDBahiindexAuroraSubnetGroup1CB429EB"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-DBCluster/Secret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "metadataindexahitordbmsAuroraDBahiindexDBClusterSecretF8360B3B3fdaad7efa858a3daf9490cf0a702aeb"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-DBCluster/Secret/Attachment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsAuroraDBahiindexDBClusterSecretAttachment6BEAFA9B"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-DBCluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsAuroraDBahiindexDBClusterCBB3A332"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-Aurora-DB/ahi-index-DBCluster/Instance1": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsAuroraDBahiindexDBClusterInstance1EF9057ED"
+          }
+        ],
+        "/metadata-index/Secret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SecretA720EF05"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-db-init-lambdarole/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsdbinitlambdaroleRole9FE2E88E"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-db-init-lambdarole/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsdbinitlambdaroleRoleDefaultPolicy505CD453"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-db-Init/ahi-to-index-mysqlConnector/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsdbInitahitoindexmysqlConnectorC5E7D660"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-db-Init/ahi-to-index-mysqlConnectionFactory/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsdbInitahitoindexmysqlConnectionFactory835B921C"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-db-Init/ahi-to-rdbms-db-Init/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsdbInit44AE1FF9"
+          }
+        ],
+        "/metadata-index/db-schema/CustomLambdaResourceProvider/framework-onEvent/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleE008C3DC"
+          }
+        ],
+        "/metadata-index/db-schema/CustomLambdaResourceProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "dbschemaCustomLambdaResourceProviderframeworkonEventServiceRoleDefaultPolicy8595371D"
+          }
+        ],
+        "/metadata-index/db-schema/CustomLambdaResourceProvider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "dbschemaCustomLambdaResourceProviderframeworkonEventADE1FD4E"
+          }
+        ],
+        "/metadata-index/db-schema/CustomLambdaResourceProvider/framework-onEvent/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "dbschemaCustomLambdaResourceProviderframeworkonEventLogRetention880EDAD8"
+          }
+        ],
+        "/metadata-index/db-schema/CustomLambdaResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "dbschemaCustomLambdaResource51704CF9"
+          }
+        ],
+        "/metadata-index/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+          }
+        ],
+        "/metadata-index/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB"
+          }
+        ],
+        "/metadata-index/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-lambdarole/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmslambdaroleRole3EF0F301"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-lambdarole/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmslambdaroleRoleDefaultPolicy5CAA777F"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms/ahi-to-index-mysqlConnector/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsahitoindexmysqlConnector6C06ADB8"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms/ahi-to-index-mysqlConnectionFactory/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsahitoindexmysqlConnectionFactory456E5B62"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms/ahi-to-index-AHIClientFactory/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsahitoindexAHIClientFactory55E8BB30"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms/ahi-to-rdbms/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbms8DE3F29A"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms/ahi-to-rdbms/ahi-to-rdbms-sllow-sns": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmsahitordbmssllowsns9DD916FC"
+          }
+        ],
+        "/metadata-index/ahi-to-rdbms-sns-subscription/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitordbmssnssubscription779FAF84"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake-lambdarole/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalakelambdaroleRole3A9B3226"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake-lambdarole/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalakelambdaroleRoleDefaultPolicy13D3F636"
+          }
+        ],
+        "/metadata-index/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Role1ABCC5F0"
+          }
+        ],
+        "/metadata-index/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleDefaultPolicy5FFB7DAB"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake-access_log-bucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalakeaccesslogbucket54640BBD"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake-access_log-bucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalakeaccesslogbucketPolicy87D70B5F"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake-destination-bucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalakedestinationbucket0B05C3C4"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake-destination-bucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalakedestinationbucketPolicyEC3D566E"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake/ahi-to-index-AHItoDICOMInterface/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalakeahitoindexAHItoDICOMInterface01802A81"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake/ahi-to-datalake/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalake2B81A0FB"
+          }
+        ],
+        "/metadata-index/ahi-to-datalake/ahi-to-datalake/ahi-to-datalake-allows-sns": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalakeahitodatalakeallowssns37D18694"
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-glue-database/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexgluedatabase032F0C6B"
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-glue-table-patient/Table": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexgluetablepatientTableA4527712"
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-glue-table-study/Table": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexgluetablestudyTable94B734FD"
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-glue-table-series/Table": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexgluetableseriesTable0380DF75"
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-glue-table-instance/Table": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexgluetableinstanceTable1D2B2E52"
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-crawler-role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexcrawlerrole3751B3B5"
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-crawler-role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexcrawlerroleDefaultPolicyCA5273F6"
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-glue-crawler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexgluecrawlerC445DC03"
+          },
+          {
+            "type": "aws:cdk:warning",
+            "data": "AwsSolutions-GL1: The Glue crawler or job does not use a security configuration with CloudWatch Log encryption enabled.\n",
+            "trace": [
+              "Annotations.addMessage (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1392)",
+              "Annotations.addWarning (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/annotations.js:1:803)",
+              "AnnotationLogger.onNonCompliance (/tmp/jsii-kernel-MQANaT/node_modules/cdk-nag/lib/nag-logger.js:32:57)",
+              "/tmp/jsii-kernel-MQANaT/node_modules/cdk-nag/lib/nag-pack.js:78:55",
+              "Array.forEach (<anonymous>)",
+              "AwsSolutionsChecks.applyRule (/tmp/jsii-kernel-MQANaT/node_modules/cdk-nag/lib/nag-pack.js:78:38)",
+              "AwsSolutionsChecks.checkAnalytics (/tmp/jsii-kernel-MQANaT/node_modules/cdk-nag/lib/packs/aws-solutions.js:819:14)",
+              "AwsSolutionsChecks.visit (/tmp/jsii-kernel-MQANaT/node_modules/cdk-nag/lib/packs/aws-solutions.js:71:18)",
+              "recurse (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2264)",
+              "recurse (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2624)",
+              "recurse (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2624)",
+              "recurse (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2624)",
+              "invokeAspects (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:1890)",
+              "synthesize (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:844)",
+              "App.synth (/tmp/jsii-kernel-MQANaT/node_modules/aws-cdk-lib/core/lib/stage.js:1:2052)",
+              "/tmp/tmpnhjmz31x/lib/program.js:9818:172",
+              "Kernel._Kernel_ensureSync (/tmp/tmpnhjmz31x/lib/program.js:10443:24)",
+              "Kernel.invoke (/tmp/tmpnhjmz31x/lib/program.js:9818:102)",
+              "KernelHost.processRequest (/tmp/tmpnhjmz31x/lib/program.js:11658:36)",
+              "KernelHost.run (/tmp/tmpnhjmz31x/lib/program.js:11618:22)",
+              "Immediate._onImmediate (/tmp/tmpnhjmz31x/lib/program.js:11619:46)",
+              "process.processImmediate (node:internal/timers:478:21)"
+            ]
+          }
+        ],
+        "/metadata-index/ahi-datalake-db/ahi-index-glue-trigger": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatalakedbahiindexgluetriggerB7608596"
+          }
+        ],
+        "/metadata-index/ahi-to-datalke-sns-subscription/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahitodatalkesnssubscriptionD9B463B4"
+          }
+        ],
+        "/metadata-index/ahi-vpc-id": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahivpcid"
+          }
+        ],
+        "/metadata-index/ahi-output-bucket": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahioutputbucket"
+          }
+        ],
+        "/metadata-index/ahi-datastore-arn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ahidatastorearn"
+          }
+        ],
+        "/metadata-index/rdbms-cluster-id": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "rdbmsclusterid"
+          }
+        ],
+        "/metadata-index/rdbms-database-secret-arn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "rdbmsdatabasesecretarn"
+          }
+        ],
+        "/metadata-index/rdbms-database-name": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "rdbmsdatabasename"
+          }
+        ],
+        "/metadata-index/rdbms-database-security-group": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "rdbmsdatabasesecuritygroup"
+          }
+        ],
+        "/metadata-index/datalake-destination-bucket": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "datalakedestinationbucket"
+          }
+        ],
+        "/metadata-index/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/metadata-index/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/metadata-index/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "metadata-index"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
