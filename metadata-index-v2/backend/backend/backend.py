@@ -23,6 +23,8 @@ from constructs import Construct
 from .function import PythonLambda
 from .network import Vpc
 from .security_groups import SecurityGroups
+from .queues import SQSQueues
+from .rule import Rule
 from .lambda_roles import LambdaRoles
 from .custom import CustomLambdaResource
 from .database import AuroraServerlessDB
@@ -54,14 +56,21 @@ class BackendStack(Stack):
         lambda_config = config.LAMBDA_CONFIG
         ahi_datastore_arn = config.AHI_DATASTORE_ARN 
         
-
-        sns_key = kms.Key(self, "sns-topic",enable_key_rotation=True)
-        sns_topic = sns.Topic(self, "ahi-to-index-topic", display_name=stack_name+"ahi-to-index-topic" , master_key=sns_key )
-        ahi_output_bucket = s3.Bucket.from_bucket_attributes(self, "ImportedBucket",bucket_arn=config.AHI_IMPORT_OUTPUT_BUCKET_ARN)
-        ahi_output_bucket.add_event_notification(s3.EventType.OBJECT_CREATED, s3n.SnsDestination(sns_topic) , s3.NotificationKeyFilter(suffix='job-output-manifest.json'))
+        # Set up S3 object event notification -> SNS
+        sns_key = kms.Key(self, "sns-topic", enable_key_rotation=True)
         sns_key.grant_encrypt_decrypt(iam.ServicePrincipal("s3.amazonaws.com"))
         sns_key.grant_encrypt_decrypt(iam.ServicePrincipal("lambda.amazonaws.com"))
-
+        sns_topic = sns.Topic(self, "ahi-to-index-topic", display_name=stack_name+"-ahi-to-index-topic" , master_key=sns_key )
+        ahi_output_bucket = s3.Bucket.from_bucket_attributes(self, "ImportedBucket",bucket_arn=config.AHI_IMPORT_OUTPUT_BUCKET_ARN)
+        #ahi_output_bucket.add_event_notification(s3.EventType.OBJECT_CREATED, s3n.SnsDestination(sns_topic) , s3.NotificationKeyFilter(suffix='job-output-manifest.json'))
+        
+        # Set up EventBridge Event rule -> SQS
+        sqs_key = kms.Key(self, "sqs-queue", enable_key_rotation=True)
+        sqs_key.grant_encrypt_decrypt(iam.ServicePrincipal("events.amazonaws.com"))
+        sqs_key.grant_encrypt_decrypt(iam.ServicePrincipal("lambda.amazonaws.com"))
+        sqs_queues = SQSQueues(self, "ahi-to-index-queue", stack_name+"-ahi-to-index-queue", sqs_key)
+        rule = Rule(self, "ahi-to-index-rule", stack_name+"-ahi-to-index-rule", sqs_queues.getQueue(), sqs_queues.getDeadLetterQueue())
+        
         if config.RDBMS_CONFIG["enabled"] == True:
             #Create the database
             aurora_security_group = sec_groups.getAuroraSecGroup()
@@ -77,9 +86,6 @@ class BackendStack(Stack):
                                                                                             "dbname": SecretValue.unsafe_plain_text(db_name),
                                                                                         },
                                                                     secret_name=stack_name+"-ahi-db-user-secret")
-
-            
-            
             
             #MySql DBInit Lambda creation.
             db_init_role = LambdaRoles(self, 'ahi-to-rdbms-db-init-lambdarole', db_secret_arn=db_secret_arn , )
@@ -98,8 +104,6 @@ class BackendStack(Stack):
             fn_ahi_to_rdbms.getFn().add_environment(key="AHLI_ENDPOINT", value="") #08/27/2023 - jpleger : This is a workaround for the medical-imaging service descriptor, not nice... Will fix soon.
             ahi_output_bucket.grant_read(fn_ahi_to_rdbms.getFn())
             
-            
-
             fn_ahi_to_rdbms.getFn().add_permission("ahi-to-rdbms-sllow-sns", principal=iam.ServicePrincipal("sns.amazonaws.com"), action="lambda:InvokeFunction")
             sns.Subscription(self, "ahi-to-rdbms-sns-subscription",topic=sns_topic,endpoint=fn_ahi_to_rdbms.getFn().function_arn ,protocol=sns.SubscriptionProtocol.LAMBDA)
 
@@ -130,11 +134,10 @@ class BackendStack(Stack):
             ahi_output_bucket.grant_read(fn_ahi_to_datalake.getFn())
             if config.DATALAKE_CONFIG["deploy_glue_default_config"] == True:
                 GlueDatabase(self, "ahi-datalake-db" , datalake_bucket=destination_bucket , stack_name=stack_name)
-
-
-            
+                
             fn_ahi_to_datalake.getFn().add_permission("ahi-to-datalake-allows-sns", principal=iam.ServicePrincipal("sns.amazonaws.com"), action="lambda:InvokeFunction")
             sns.Subscription(self, "ahi-to-datalke-sns-subscription",topic=sns_topic,endpoint=fn_ahi_to_datalake.getFn().function_arn ,protocol=sns.SubscriptionProtocol.LAMBDA)
+            
         if (config.VPC["USE_VPC"] == True):
             CfnOutput(self, "ahi-vpc-id", export_name=f"{stack_name}-ahi-vpc-id", value=vpc.vpc_id)
         CfnOutput(self, "ahi-output-bucket", export_name=f"{stack_name}-ahi-output-bucket", value=ahi_output_bucket.bucket_name)
@@ -146,3 +149,4 @@ class BackendStack(Stack):
             CfnOutput(self, "rdbms-database-security-group", export_name=f"{stack_name}-rdbms-database-security-group", value=aurora_security_group.security_group_id)  
         if config.DATALAKE_CONFIG["enabled"] == True:
             CfnOutput(self, "datalake-destination-bucket", export_name=f"{stack_name}-datalake-destination-bucket", value=destination_bucket.bucket_name)
+            
