@@ -9,6 +9,7 @@ from constructs import Construct
 import aws_cdk as cdk
 from aws_cdk import (
     aws_events as events,
+    aws_events_targets as targets,
     aws_sqs as sqs,
     Duration as Duration,
 )
@@ -21,9 +22,18 @@ class Rule(Construct):
         # define rule
         self._rule = events.Rule(self, id,
             event_pattern=events.EventPattern(
-                source=["aws.medical-imaging"]
+                source=["aws.medical-imaging"],
+                detail_type=[
+                    "Image Set Clopied",
+                    "Image Set Created",
+                    "Image Set Deleted",
+                    "Image Set Updated"
+                ],
             )
         )
         
         # add target
+        self._rule.add_target(targets.SqsQueue(queue,
+            dead_letter_queue=dead_letter_queue
+        ))
         
