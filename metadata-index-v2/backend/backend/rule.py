@@ -26,7 +26,6 @@ class Rule(Construct):
                 detail_type=[
                     "Image Set Clopied",
                     "Image Set Created",
-                    "Image Set Deleted",
                     "Image Set Updated"
                 ],
             )
