@@ -18,6 +18,7 @@ from aws_cdk import (
     aws_secretsmanager as secretsmanager,
     aws_logs as logs,
     CfnOutput,
+    Duration,
 )
 from aws_cdk import SecretValue
 from constructs import Construct
@@ -108,7 +109,7 @@ class BackendStack(Stack):
 
             sqs_queues = SQSQueues(self, "ahi-to-rdbms-queue", stack_name+"-ahi-to-rdbms-queue", sqs_key)
             rule = Rule(self, "ahi-to-rdbms-rule", stack_name+"-ahi-to-rdbms-rule", sqs_queues.getQueue(), sqs_queues.getDeadLetterQueue())
-            sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue())
+            sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue() , batch_size=40 , enabled=True , max_batching_window=Duration.seconds(2) , max_concurrency=100 , report_batch_item_failures=True )
             fn_ahi_to_rdbms.getFn().add_event_source(sqs_event_source)
 
         if config.OPENSEARCH_CONFIG["enabled"] == True:
@@ -122,7 +123,7 @@ class BackendStack(Stack):
 
             sqs_queues = SQSQueues(self, "ahi-to-opensearch-queue", stack_name+"-ahi-to-opensearch-queue", sqs_key)
             rule = Rule(self, "ahi-to-opensearch-rule", stack_name+"-ahi-to-opensearch-rule", sqs_queues.getQueue(), sqs_queues.getDeadLetterQueue())
-            sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue())
+            sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue() , batch_size=40 , enabled=True , max_batching_window=Duration.seconds(2) , max_concurrency=100 , report_batch_item_failures=True )
             fn_ahi_to_opensearch.getFn().add_event_source(sqs_event_source)
 
         if config.DATALAKE_CONFIG["enabled"] == True:
@@ -149,7 +150,7 @@ class BackendStack(Stack):
             
             sqs_queues = SQSQueues(self, "ahi-to-datalake-queue", stack_name+"-ahi-to-datalake-queue", sqs_key)
             rule = Rule(self, "ahi-to-datalake-rule", stack_name+"-ahi-to-datalake-rule", sqs_queues.getQueue(), sqs_queues.getDeadLetterQueue())
-            sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue())
+            sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue() , batch_size=40 , enabled=True , max_batching_window=Duration.seconds(2) , max_concurrency=100 , report_batch_item_failures=True )
             fn_ahi_to_datalake.getFn().add_event_source(sqs_event_source)
 
 
