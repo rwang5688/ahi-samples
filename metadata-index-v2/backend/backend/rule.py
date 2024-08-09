@@ -24,7 +24,7 @@ class Rule(Construct):
             event_pattern=events.EventPattern(
                 source=["aws.medical-imaging"],
                 detail_type=[
-                    "Image Set Clopied",
+                    "Image Set Copied",
                     "Image Set Created",
                     "Image Set Updated"
                 ],
