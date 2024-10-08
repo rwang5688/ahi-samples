@@ -58,15 +58,7 @@ class BackendStack(Stack):
         lambda_config = config.LAMBDA_CONFIG
         ahi_datastore_arn = config.AHI_DATASTORE_ARN 
         
-        # Set up S3 object event notification -> SNS
-        #sns_key = kms.Key(self, "sns-topic", enable_key_rotation=True)
-        #sns_key.grant_encrypt_decrypt(iam.ServicePrincipal("s3.amazonaws.com"))
-        #sns_key.grant_encrypt_decrypt(iam.ServicePrincipal("lambda.amazonaws.com"))
-        #sns_topic = sns.Topic(self, "ahi-to-index-topic", display_name=stack_name+"-ahi-to-index-topic" , master_key=sns_key )
-        #ahi_output_bucket = s3.Bucket.from_bucket_attributes(self, "ImportedBucket",bucket_arn=config.AHI_IMPORT_OUTPUT_BUCKET_ARN)
-        #ahi_output_bucket.add_event_notification(s3.EventType.OBJECT_CREATED, s3n.SnsDestination(sns_topic) , s3.NotificationKeyFilter(suffix='job-output-manifest.json'))
-        
-        # Set up EventBridge Event rule -> SQS
+        # Set up EventBridge rule -> SQS queue -> Lambda function
         sqs_key = kms.Key(self, "sqs-queue", enable_key_rotation=True)
         sqs_key.grant_encrypt_decrypt(iam.ServicePrincipal("events.amazonaws.com"))
         sqs_key.grant_encrypt_decrypt(iam.ServicePrincipal("lambda.amazonaws.com"))
@@ -103,10 +95,6 @@ class BackendStack(Stack):
             fn_ahi_to_rdbms.getFn().add_environment(key="POPULATE_FRAME_LEVEL", value=str(config.RDBMS_CONFIG["populate_frame_level"])) 
             fn_ahi_to_rdbms.getFn().add_environment(key="AHLI_ENDPOINT", value="") #08/27/2023 - jpleger : This is a workaround for the medical-imaging service descriptor, not nice... Will fix soon.
             
-            #ahi_output_bucket.grant_read(fn_ahi_to_rdbms.getFn())
-            #fn_ahi_to_rdbms.getFn().add_permission("ahi-to-rdbms-allow-sns", principal=iam.ServicePrincipal("sns.amazonaws.com"), action="lambda:InvokeFunction")
-            #sns.Subscription(self, "ahi-to-rdbms-sns-subscription",topic=sns_topic,endpoint=fn_ahi_to_rdbms.getFn().function_arn ,protocol=sns.SubscriptionProtocol.LAMBDA)
-
             sqs_queues = SQSQueues(self, "ahi-to-rdbms-queue", stack_name+"-ahi-to-rdbms-queue", sqs_key)
             rule = Rule(self, "ahi-to-rdbms-rule", stack_name+"-ahi-to-rdbms-rule", sqs_queues.getQueue(), sqs_queues.getDeadLetterQueue())
             sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue() , batch_size=40 , enabled=True , max_batching_window=Duration.seconds(2) , max_concurrency=100 , report_batch_item_failures=True )
@@ -117,10 +105,6 @@ class BackendStack(Stack):
             fn_ahi_to_opensearch = PythonLambda(self, "ahi-to-opensearch", lambda_config["AHItoOpenSearch"], opensearch_lambda_role.getLambdaRole(), vpc=vpc, vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS) , security_group=sec_groups.getLambdaSecGroup() )
             fn_ahi_to_opensearch.getFn().add_environment(key="DOMAIN_ENDPOINT", value="")
             
-            #ahi_output_bucket.grant_read(fn_ahi_to_opensearch.getFn())
-            #fn_ahi_to_opensearch.getFn().add_permission("ahi-to-opensearch-allow-sns", principal=iam.ServicePrincipal("sns.amazonaws.com"), action="lambda:InvokeFunction")
-            #sns.Subscription(self, "ahi-to-opensearch-sns-subscription",topic=sns_topic,endpoint=fn_ahi_to_opensearch.getFn().function_arn,protocol=sns.SubscriptionProtocol.LAMBDA)
-
             sqs_queues = SQSQueues(self, "ahi-to-opensearch-queue", stack_name+"-ahi-to-opensearch-queue", sqs_key)
             rule = Rule(self, "ahi-to-opensearch-rule", stack_name+"-ahi-to-opensearch-rule", sqs_queues.getQueue(), sqs_queues.getDeadLetterQueue())
             sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue() , batch_size=40 , enabled=True , max_batching_window=Duration.seconds(2) , max_concurrency=100 , report_batch_item_failures=True )
@@ -143,10 +127,6 @@ class BackendStack(Stack):
             destination_bucket.grant_read_write(fn_ahi_to_datalake.getFn())
             if config.DATALAKE_CONFIG["deploy_glue_default_config"] == True:
                 GlueDatabase(self, "ahi-datalake-db" , datalake_bucket=destination_bucket , stack_name=stack_name)
-
-            #ahi_output_bucket.grant_read(fn_ahi_to_datalake.getFn())                
-            #fn_ahi_to_datalake.getFn().add_permission("ahi-to-datalake-allows-sns", principal=iam.ServicePrincipal("sns.amazonaws.com"), action="lambda:InvokeFunction")
-            #sns.Subscription(self, "ahi-to-datalke-sns-subscription",topic=sns_topic,endpoint=fn_ahi_to_datalake.getFn().function_arn ,protocol=sns.SubscriptionProtocol.LAMBDA)
             
             sqs_queues = SQSQueues(self, "ahi-to-datalake-queue", stack_name+"-ahi-to-datalake-queue", sqs_key)
             rule = Rule(self, "ahi-to-datalake-rule", stack_name+"-ahi-to-datalake-rule", sqs_queues.getQueue(), sqs_queues.getDeadLetterQueue())
@@ -156,7 +136,6 @@ class BackendStack(Stack):
 
         if (config.VPC["USE_VPC"] == True):
             CfnOutput(self, "ahi-vpc-id", export_name=f"{stack_name}-ahi-vpc-id", value=vpc.vpc_id)
-        #CfnOutput(self, "ahi-output-bucket", export_name=f"{stack_name}-ahi-output-bucket", value=ahi_output_bucket.bucket_name)
         CfnOutput(self, "ahi-datastore-arn", export_name=f"{stack_name}-ahi-datastore-arn", value=ahi_datastore_arn)
         if config.RDBMS_CONFIG["enabled"] == True:
             CfnOutput(self, "rdbms-cluster-id", export_name=f"{stack_name}-rdbms-database-arn", value=db.getDbCluster().cluster_resource_identifier)

@@ -5,9 +5,6 @@ CDK_APP_NAME = "metadata-index-v2"
 #The datstore ARN of the AHI datastore. You can find this value in the AHI Web console on your AWS account.
 #AHI_DATASTORE_ARN = "arn:aws:medical-imaging:[REGION]:[ACCOUNT_NUMBER]:datastore/[DATASTORE_ID]"
 AHI_DATASTORE_ARN = "arn:aws:medical-imaging:us-east-1:793803570670:datastore/46015371bee548dd90178e18eaa7b96a"
-#The bucket specified as the output s3 location for the AHI import jobs.
-#AHI_IMPORT_OUPUT_BUCKET_ARN = "arn:aws:s3:::[AHI_OUTPUT_BUCKET_NAME]"
-AHI_IMPORT_OUTPUT_BUCKET_ARN = "arn:aws:s3:::healthimaging-output-bucket-40030240"
 
 #Note that to use RDBMS mode requires to havve a VPC. Make sure to set USE_PVC to True in the VPC config below.
 RDBMS_CONFIG = {
