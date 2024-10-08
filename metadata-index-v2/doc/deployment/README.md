@@ -29,7 +29,7 @@ The project configuration is in the file `[project root]/backend/config.py`. You
     <tr>
         <td>ROOT</td>
         <td>CDK_APP_NAME</td>
-        <td>ahi-index</td>
+        <td>metadata-index-v2</td>
         <td>Name of the solution. This name will be use to tag all the resources created by the solution. If you intend to deploy multiple instance of this solution on the same AWS account make sure to change this name for each deployment.</td>
     </tr>
     <tr>
