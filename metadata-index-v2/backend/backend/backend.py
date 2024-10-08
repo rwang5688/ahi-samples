@@ -132,8 +132,8 @@ class BackendStack(Stack):
             rule = Rule(self, "ahi-to-datalake-rule", stack_name+"-ahi-to-datalake-rule", sqs_queues.getQueue(), sqs_queues.getDeadLetterQueue())
             sqs_event_source = lambda_event_source.SqsEventSource(sqs_queues.getQueue() , batch_size=40 , enabled=True , max_batching_window=Duration.seconds(2) , max_concurrency=100 , report_batch_item_failures=True )
             fn_ahi_to_datalake.getFn().add_event_source(sqs_event_source)
-
-
+            
+        # generate CloudFormation stack output
         if (config.VPC["USE_VPC"] == True):
             CfnOutput(self, "ahi-vpc-id", export_name=f"{stack_name}-ahi-vpc-id", value=vpc.vpc_id)
         CfnOutput(self, "ahi-datastore-arn", export_name=f"{stack_name}-ahi-datastore-arn", value=ahi_datastore_arn)
